@@ -1,6 +1,9 @@
 # pull official base image
 FROM python:3.11.4-slim-buster
 
+COPY entrypoint.sh requirements.txt /usr/src/app/
+# COPY requirements.txt .
+
 # set work directory
 WORKDIR /usr/src/app
 
@@ -13,16 +16,16 @@ RUN apt-get update && apt-get install -y netcat
 
 # install dependencies
 RUN pip install --upgrade pip
-COPY ./requirements.txt .
+# COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # copy entrypoint.sh
-COPY ./entrypoint.sh .
-RUN sed -i 's/\r$//g' /usr/src/app/entrypoint.sh
+# COPY entrypoint.sh /usr/src/app/
+RUN sed -i 's/$//g' /usr/src/app/entrypoint.sh
 RUN chmod +x /usr/src/app/entrypoint.sh
 
 # copy project
-COPY . .
+COPY . /usr/src/app/
 
 # run entrypoint.sh
-ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+CMD ["/usr/src/app/entrypoint.sh"]
